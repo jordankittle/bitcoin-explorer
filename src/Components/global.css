@@ -1,0 +1,156 @@
+/*  Global   */
+:root {
+    --main-blue:#1995bb;
+    --hover-blue: #1daad4;
+    --main-dark: #111;
+    --highlight-grey: #1E1E1E;
+}
+
+* {
+    box-sizing: border-box;
+}
+body {
+    background: var(--main-dark);
+    color: white;
+}
+a:link{
+    color: var(--main-blue);
+    text-decoration: none;
+}
+a:visited{
+    color: var(--main-blue);
+}
+a:hover{
+    color: var(--hover-blue);
+}
+a:active{
+    color: var(--main-blue);
+}
+
+
+/*  Header */
+
+.header-logo a {
+    text-decoration: none;
+    color: var(--main-blue)
+}
+
+#search {
+    margin: auto;
+    width: 60%;
+    height: 35px;
+    display: block;
+}
+
+/*  Main Styles */
+
+main {
+
+}
+
+.container{
+    display: flex;
+    justify-content: space-around;
+}
+
+.wrap {
+    max-width: 1250px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-links {
+    text-align: right
+}
+
+.header-links li {
+    display: inline-block;
+    padding: 0 10px
+}
+
+.error {
+    color:orangered;
+}
+
+.blockrow {
+    display: flex;
+    justify-content: space-between;
+}
+
+.blocks {
+    margin-top: 25px;
+    width: 60%;
+}
+
+.blockrow:nth-child(odd){
+    background: var(--highlight-grey);
+}
+
+.blockrow:first-child{
+    background: var(--main-blue);
+}
+
+.block span {
+    display: inline-block;
+}
+.blockrow-height{
+    width:20%;
+    text-align: left;
+}
+.blockrow-time{
+    width:40%;
+    text-align: center;
+}
+.blockrow-transactions{
+    width:20%;
+    text-align: center;
+}
+.blockrow-size{
+    width:20%;
+    text-align: right;
+}
+
+.block-details{
+    margin-top:25px;
+    display: flex;
+    width: 60%;
+    justify-content: space-between;
+}
+
+.block-detail-labels{
+    text-align: left;
+    width: 40%;
+}
+.block-detail-data{
+    text-align: left;
+    width: 60%;
+}
+
+.transaction-list{
+    margin-top:25px;
+    width: 60%;
+}
+
+.txrow{
+    display: flex;
+    font-size:12px;
+    padding: 10px 0px
+}
+.txrow:nth-child(odd){
+    background:var(--highlight-grey);
+}
+
+.txrow-labels{
+    text-align: left;
+    width: 30%;
+}
+.txrow-data{
+    text-align: left;
+    width: 70%;
+}
