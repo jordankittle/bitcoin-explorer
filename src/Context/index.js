@@ -1,11 +1,8 @@
-import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import React from 'react';
 
 export const APIContext = React.createContext();
 
 export const Provider = (props) => {
-
-    const history = useHistory();
 
     // handle API calls then return the response
     const api = (path, method = 'GET', body = null) => {
@@ -20,11 +17,9 @@ export const Provider = (props) => {
 
         return fetch(url, options)
             .then(response => response)
-            .catch(response => {
-                response.status = 500;
-                return response;
-            })
-        ;  
+            .catch(err => {
+                console.error(err);
+            });  
     };
     
     const getBlocks = async (height = null) => {

@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect } from 'react';
-import { useParams, useHistory, Link } from 'react-router-dom';
+import { useParams, Link, useHistory } from 'react-router-dom';
 import { APIContext } from '../Context';
 
 
@@ -10,6 +10,7 @@ const BlockAll = () => {
     const [ blockTipHeight, setBlockTipHeight ] = useState();
     const { actions } = useContext(APIContext);
     const { hash } = useParams();
+
     const history = useHistory();
 
     useEffect(() => {
@@ -18,8 +19,12 @@ const BlockAll = () => {
                 .then(response => {
                     if(response.status === 200){
                         response.json().then(data => setBlock(data));
+                    } else if(response.status === 400) {
+                        history.push('/not-found');
+                    } else if(response.status === 500){
+                        history.push('/error');
                     } else {
-                        // handle error case
+                        throw new Error('An unknown error has occured');
                     }
                     
                 })
@@ -28,8 +33,12 @@ const BlockAll = () => {
                 .then(response => {
                     if(response.status === 200){
                         response.json().then(data => setTransactions(data));
+                    } else if(response.status === 400) {
+                        history.push('/not-found');
+                    } else if(response.status === 500){
+                        history.push('/error');
                     } else {
-                        // handle error case
+                        throw new Error('An unknown error has occured');
                     }
                 })
                 .catch(error => console.log(error));
@@ -37,14 +46,18 @@ const BlockAll = () => {
                 .then(response => {
                     if(response.status === 200){
                         response.text().then(data => setBlockTipHeight(data));
+                    } else if(response.status === 400) {
+                        history.push('/not-found');
+                    } else if(response.status === 500){
+                        history.push('/error');
                     } else {
-                        //handle error case
+                        throw new Error('An unknown error has occured');
                     }
                 })
                 .catch(error => console.log(error));
         };
         getBlock();
-    }, [actions, hash]);
+    }, [actions, hash, history]);
 
     return(
         <div className="block">
@@ -72,7 +85,7 @@ const BlockAll = () => {
                         </div>
                     </>
                 :
-                    <span>Loading...</span>
+                    <div className="container"><h2>Loading...</h2></div>
             }
         </div>
     );
@@ -81,7 +94,7 @@ const BlockAll = () => {
 function TransactionsAll({ transactions, blockTipHeight }){
 
     return(
-        <div className="transaction-list">
+        <div className="transaction-list transaction-list-spaced">
             {
                 transactions? 
                     transactions.map((transaction, index) => 

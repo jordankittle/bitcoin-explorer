@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import { APIContext } from '../Context';
 
 const Address = () => {
@@ -7,6 +7,8 @@ const Address = () => {
     const [ addressInfo, setAddressInfo ] = useState();
     const { address } = useParams();
     const { actions } = useContext(APIContext);
+
+    const history = useHistory();
 
     useEffect(() => {
         const getTx = async () => {
@@ -17,15 +19,19 @@ const Address = () => {
                             setAddressInfo(data);
                         })
                         .catch(error => console.log('unknown error', error));
+                    } else if(response.status === 400) {
+                        history.push('/not-found');
+                    } else if(response.status === 500){
+                        history.push('/error');
                     } else {
-                        // handle error case
+                        throw new Error('An unknown error has occured');
                     }
                     
                 })
                 .catch(error => console.log(error));
         };
         getTx();
-    }, [actions, address]);
+    }, [actions, address, history]);
 
     return (
         <div className="container">
@@ -34,7 +40,7 @@ const Address = () => {
                     addressInfo?
                         <AddressInfo addressInfo={addressInfo} />
                     :
-                        <div className="container">Loading...</div>
+                        <div className="container"><h2>Loading...</h2></div>
                 }
             </div>
         </div>

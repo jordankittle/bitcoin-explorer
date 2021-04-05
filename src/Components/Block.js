@@ -1,14 +1,15 @@
 import { useState, useContext, useEffect } from 'react';
 import { useParams, useHistory, Link } from 'react-router-dom';
 import { APIContext } from '../Context';
+
 import Inputs from './Inputs';
 import Outputs from './Outputs';
 
 const Block = () => {
 
     const [ block, setBlock ] = useState();
-    const [ transactions, setTransactions ] = useState();
-    const [ txIndex, setTxIndex ] = useState(0);
+    const [ transactions, setTransactions ] = useState([]);
+    const [ index, setIndex ] = useState(0);
     const [ blockTipHeight, setBlockTipHeight ] = useState();
     const { actions } = useContext(APIContext);
     const { hash } = useParams();
@@ -20,18 +21,26 @@ const Block = () => {
                 .then(response => {
                     if(response.status === 200){
                         response.json().then(data => setBlock(data));
+                    } else if(response.status === 400) {
+                        history.push('/not-found');
+                    } else if(response.status === 500){
+                        history.push('/error');
                     } else {
-                        // handle error case
+                        throw new Error('An unknown error has occured');
                     }
                     
                 })
                 .catch(error => console.log(error));
-            await actions.getBlockTxIdsByIndex(hash, txIndex)
+            await actions.getBlockTxIdsByIndex(hash, 0)
                 .then(response => {
                     if(response.status === 200){
                         response.json().then(data => setTransactions(data));
+                    } else if(response.status === 400) {
+                        history.push('/not-found');
+                    } else if(response.status === 500){
+                        history.push('/error');
                     } else {
-                        // handle error case
+                        throw new Error('An unknown error has occured');
                     }
                 })
                 .catch(error => console.log(error));
@@ -39,18 +48,34 @@ const Block = () => {
                 .then(response => {
                     if(response.status === 200){
                         response.text().then(data => setBlockTipHeight(data));
+                    } else if(response.status === 400) {
+                        history.push('/not-found');
+                    } else if(response.status === 500){
+                        history.push('/error');
                     } else {
-                        //handle error case
+                        throw new Error('An unknown error has occured');
                     }
                 })
                 .catch(error => console.log(error));
         };
         getBlock();
-    }, [actions, hash]);
+    }, [actions, hash, history]);
 
-    const loadMore = () => {
-        console.log('load more tx');
-    };
+    const loadMore = async (e) => {
+        await actions.getBlockTxIdsByIndex(hash, index)
+                .then(response => {
+                    if(response.status === 200){
+                        response.json().then(data => setTransactions(prevTransactions => [...prevTransactions,...data]));
+                    } else if(response.status === 400) {
+                        history.push('/not-found');
+                    } else if(response.status === 500){
+                        history.push('/error');
+                    } else {
+                        throw new Error('An unknown error has occured');
+                    }
+                })
+        setIndex(prevIndex => prevIndex +  25);
+    }
 
     return(
         <div className="block">
@@ -85,17 +110,17 @@ const Block = () => {
                         <div className="container">
                             <div className="load-more flex-between">
                                 <span>
-                                    <a href="#" onClick={loadMore}>Load next 25 Transactions</a>
+                                    <button onClick={loadMore}>Load next 25 Transactions</button>
                                 </span>
                                 <span>
-                                    <Link to={`/block/${hash}/all`}>Load All Transactions</Link>
+                                    <button onClick={() => history.push(`/block/${hash}/all`)}>Load All Transactions</button>
                                 </span>
                             </div>
                             
                         </div>
                     </>
                 :
-                    <div className="container">Loading...</div>
+                    <div className="container"><h2>Loading...</h2></div>
             }
         </div>
     );
@@ -119,20 +144,17 @@ function Transactions({ transactions, blockTipHeight }){
 function TransactionRow({ transaction, blockTipHeight }){
 
     const [ collapsed, setCollapsed ] = useState(true);
-    const [ confirmations, setConfirmations ] = useState(() => {
-        return +blockTipHeight - transaction.status.block_height + 1;
-    });
-    const [ amount, setAmount ] = useState(() => {
-        return transaction.vout.reduce((acc, txout) => (txout.value/100000000) + acc, 0).toFixed(8);
-    });
+    const [ confirmations, setConfirmations ] = useState();
+    const [ amount, setAmount ] = useState();
+    const [ inputs, setInputs] = useState();
+    const [ outputs, setOutputs ] = useState();
 
-    const [ inputs, setInputs ] = useState(() => {
-        return transaction.vin.map((txin, index) => <div key={index}>{txin.is_coinbase?'Coinbase':<Inputs txin={txin} />}</div> );
-    });
-
-    const [ outputs, setOutputs ] = useState(() => {
-        return transaction.vout.map((txout, index) => <div key={index}>{<Outputs txout={txout} />}</div>);
-    });
+    useEffect(() => {
+        setConfirmations(+blockTipHeight - transaction.status.block_height + 1);
+        setAmount(transaction.vout.reduce((acc, txout) => (txout.value/100000000) + acc, 0).toFixed(8));
+        setInputs(transaction.vin.map((txin, index) => <div key={index}>{txin.is_coinbase?'Coinbase':<Inputs txin={txin} />}</div> ));
+        setOutputs(transaction.vout.map((txout, index) => <div key={index}>{<Outputs txout={txout} />}</div>));
+    },[setConfirmations, setAmount, setInputs, setOutputs, blockTipHeight, transaction.status.block_height, transaction.vin, transaction.vout]);
 
     const toggle = (e, value) => {
         e.preventDefault();
@@ -172,7 +194,7 @@ function TransactionRow({ transaction, blockTipHeight }){
                     collapsed?
                     null
                     :
-                    <div classnName="multiline">
+                    <div className="multiline">
                         <div className="txrow-row flex-between">
                             <div className="txrow-property">
                                 Inputs:
@@ -196,11 +218,11 @@ function TransactionRow({ transaction, blockTipHeight }){
                     {
                         collapsed?
                             <div>
-                                <a href="#" onClick={(e) => toggle(e, false)}>Show More</a>
+                                <button onClick={(e) => toggle(e, false)}>Show More</button>
                             </div>
                         :
                             <div>
-                                <a href="#" onClick={(e) => toggle(e, true)}>Show Less</a>
+                                <button onClick={(e) => toggle(e, true)}>Show Less</button>
                             </div>
                     }
                     

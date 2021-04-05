@@ -1,32 +1,54 @@
 import { useState, useContext } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { APIContext } from '../Context';
+import  useWindowSize from '../Hooks/useWindowSize';
 
 const Header = ()  => {
 
+    const [ menu, setMenu ] = useState(false);
     const [ search, setSearch ] = useState('');
     const { actions } = useContext(APIContext);
+    const { width } = useWindowSize();
+
     const history = useHistory();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if(search.match(/^[0-9]+$/) ){
-            await actions.getBlockHash(search)
+        const query = search.replace(/\s+/g, '');
+        if( query.match(/^[0-9]+$/) ){
+            await actions.getBlockHash(query)
                 .then(response => {
                     if(response.status === 200){
                         response.text().then(data => history.push(`/block/${data}`) );
+                    } else if(response.status === 400) {
+                        history.push('/not-found');
+                    } else if(response.status === 500){
+                        history.push('/error');
                     } else {
-                        //handle error
+                        throw new Error('An unknown error has occured');
                     }
                 })
                 .catch(error => console.log(error));
             
+        } else if( query.match(/^(bc1|[13])[a-zA-HJ-NP-Z0-9]{14,74}$/) ){
+            history.push(`/address/${query}`);
+        } else if (query.match(/^[0]{8}[a-fA-F0-9]{56}$/)){
+            history.push(`/block/${query}`);
+        } else if(query.match(/^[a-fA-F0-9]{64}$/)){
+            history.push(`/tx/${query}`);
+        } else {
+            console.log('Invalid search');
         }
         setSearch('');     
     };
 
     const change = (e) => {
         setSearch(e.target.value);
+    };
+
+    const toggleBurger = (e) => {
+        e.preventDefault();
+        setMenu(menu ? false : true);
     };
 
     return (
@@ -36,19 +58,38 @@ const Header = ()  => {
                     <Link to="/">Bitcoin Explorer</Link>
                 </h1>
                 <nav>
-                    <ul className="header-links">
-                        <li><Link to="/">Home</Link></li>
-                        <li><Link to="/">About</Link></li>                       
-                    </ul>
+                    {
+                        width > 768 || menu ?
+                                <ul className="header-links">
+                                    <li><Link to="/">Home</Link></li>
+                                    <li><Link to="/about">About</Link></li>                       
+                                </ul>
+                            :
+                                null
+                    }
+                    {
+                        <div className="burger">
+                            <a href="/" onClick={toggleBurger}>
+                                <div className="burgerDiv" ></div>
+                                <div className="burgerDiv" ></div>
+                                <div className="burgerDiv" ></div>
+                            </a>
+                        </div>
+                    }
+                    
+                    
                 </nav>
             </div>
             <div className="search">
                 <form onSubmit={handleSubmit}>
-                    <input type="text" id="search" value={search} onChange={change} placeholder="Search by Block Height, Block Hash, TxID, or Address"></input>
+                    <label htmlFor="search"></label>
+                    <input type="text" id="search" name="search" value={search} onChange={change} placeholder="Search by Block Height, Block Hash, TxID, or Address"></input>
                 </form>
             </div>
         </header>
     );
 };
+
+
 
 export default Header;

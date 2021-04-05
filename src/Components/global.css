@@ -1,6 +1,6 @@
-/*  Global   */
 @import-normalize;
 
+ul {padding-inline-start: 0}
 :root {
     --main-blue:#1995bb;
     --hover-blue: #1daad4;
@@ -37,7 +37,7 @@ a:active{
     display: flex;
     justify-content: space-between;
 }
-.flex-even{
+.flex-evenly{
     display:flex;
     justify-content: space-evenly;
 }
@@ -52,9 +52,27 @@ a:active{
 
 #search {
     margin: auto;
-    width: 60%;
+    width: 75%;
     height: 35px;
     display: block;
+}
+
+.header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+.header-links {
+    text-align: right;
+    list-style: none;
+    display: flex;
+    flex-flow: row nowrap;
+}
+
+.header-links li {
+    padding: 0 10px;
 }
 
 /*  Main Styles */
@@ -78,21 +96,6 @@ main {
     display: none;
 }
 
-.header-flex {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.header-links {
-    text-align: right
-}
-
-.header-links li {
-    display: inline-block;
-    padding: 0 10px
-}
-
 .error {
     color:orangered;
 }
@@ -100,18 +103,19 @@ main {
 .blockrow {
     display: flex;
     justify-content: space-between;
+    padding: 10px 5px;
 }
 
 .blocks {
     margin-top: 25px;
-    width: 60%;
+    width: 75%;
 }
 
-.blockrow:nth-child(odd){
+.blocks a:nth-child(odd) .blockrow {
     background: var(--highlight-grey);
 }
 
-.blockrow:first-child{
+.blockrow-title{
     background: var(--main-blue);
 }
 
@@ -138,7 +142,7 @@ main {
 .block-details{
     margin-top:25px;
     display: flex;
-    width: 60%;
+    width: 75%;
     justify-content: space-between;
 }
 
@@ -148,20 +152,23 @@ main {
 }
 .block-detail-data{
     text-align: left;
-    width: 60%;
+    width: 75%;
 }
 .load-more{
-    width: 60%;
+    width: 75%;
+    margin: 15px 0;
 }
 
 .transaction-list{
     margin-top:25px;
-    width: 60%;
+    width: 75%;
+    word-break: break-all;
 }
 
 .txrow{
-    font-size:11px;
-    padding: 10px 0px
+    font-size:13px;
+    padding: 10px 0px;
+    word-break: break-all;
 }
 .txrow:nth-child(odd){
     background:var(--highlight-grey);
@@ -223,15 +230,48 @@ main {
 }
 .transaction-list {
     font-size: 12px;
+    
 }
+.transaction-list-spaced div{
+    margin: 5px 0;
+}
+
 .transaction-details{
-    width: 60%;
+    width: 75%;
+}
+
+.burger {
+    display: none;
+
+}
+
+.burgerDiv{
+    width: 2rem;
+    height: 0.2rem;
+    background-color: var(--main-blue);
+    margin: 0.25rem;
+    border-radius: 5px;
+}
+
+button {
+    background: var(--highlight-grey);
+    border-radius: 5px;
+    color: var(--main-blue);
+    border: 1px solid;
+    border-color: #666 #333 #333 #666;
+}
+button:hover {
+    background: var(--main-dark);
+    color: var(--hover-blue);
 }
 
 
 /* Media Queries */
 
 @media (max-width: 1024px) {
+    body, .txrow {
+        font-size: 12px;
+    }
     #search, .blocks,  .block-details, .transaction-list, .transaction-details, .load-more {
       width: 80%;
     }
@@ -247,6 +287,25 @@ main {
     .txrow {
         font-size: 10px;
     }
+    .header-flex {
+        flex-flow: column nowrap;
+    }
+    .header-links {
+        text-align: right;
+        list-style: none;
+        display: flex;
+        flex-flow: row wrap;
+        position: relative;
+    }
+
+    .burger {
+        display: inline-block;
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        justify-content: space-around;
+        flex-flow: column nowrap;
+    }
 
 
 }
@@ -257,12 +316,20 @@ main {
     }
     .txin-left, .txin-right, .txout-left, .txout-right {
         display: block;
+        width:75%;
     }
-    .txin-right span, .txout-right span:nth-child(2) {
+    .txin-right span:nth-child(2), .txout-right span:nth-child(2) {
         padding-left:5px;
     }
+    .transaction-list-spaced div{
+        margin: 10px 0;
+    }
+    
 }
 
 @media (max-width: 480px) {
+    .transaction-list {
+        font-size: 9px;
+    }
     
 }

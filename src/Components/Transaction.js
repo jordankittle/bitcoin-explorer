@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
 import { APIContext } from '../Context';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 
 import Inputs from './Inputs';
 import Outputs from './Outputs';
@@ -13,6 +13,8 @@ const Transaction = () => {
     const { actions } = useContext(APIContext);
     const { txid } = useParams();
 
+    const history = useHistory();
+
     useEffect(() => {
         const getTx = async () => {
             await actions.getTxById(txid)
@@ -24,15 +26,19 @@ const Transaction = () => {
                             setOutputs(data.vout.map((txout, index) => <div key={index}>{<Outputs txout={txout} />}</div>)); 
                         })
                         .catch(error => console.log('unknown error', error));
+                    } else if(response.status === 400) {
+                        history.push('/not-found');
+                    } else if(response.status === 500){
+                        history.push('/error');
                     } else {
-                        // handle error case
+                        throw new Error('An unknown error has occured');
                     }
                     
                 })
                 .catch(error => console.log(error));
         };
         getTx();
-    }, [actions]);
+    }, [actions, txid, history]);
 
     return (
         <div className="container">
@@ -41,7 +47,7 @@ const Transaction = () => {
                     transaction?
                         <TxDetails transaction={transaction} inputs={inputs} outputs={outputs} />
                     :
-                        <div className="container">Loading...</div>
+                        <div className="container"><h2>Loading...</h2></div>
                 }
             </div>
         </div>

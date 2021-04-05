@@ -11,6 +11,8 @@ import BlockAll from './Components/BlockAll';
 import Block from './Components/Block';
 import Transaction from './Components/Transaction';
 import Address from './Components/Address';
+import About from './Components/About';
+import NotFound from './Components/NotFound';
 import Error from './Components/Error';
 
 function App() {
@@ -24,8 +26,10 @@ function App() {
           <Route path="/block/:hash" component={Block} />
           <Route path="/tx/:txid" component={Transaction} />
           <Route path="/address/:address" component={Address} />
+          <Route path="/about/" component={About} />
           <Route path="/error" component={Error} />
-          <Route component={Error} />
+          <Route path="/not-found" component={NotFound} />
+          <Route component={NotFound} />
         </Switch>
       </main>
 

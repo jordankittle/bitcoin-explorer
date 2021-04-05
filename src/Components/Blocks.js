@@ -1,11 +1,14 @@
 import { useState, useContext, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { APIContext } from '../Context';
 
 const Blocks = () => {
 
     const [ blocks, setBlocks ] = useState([]);
+    const [ index, setIndex ] = useState();
     const { actions } = useContext(APIContext);
+
+    const history = useHistory();
 
     useEffect(() => {
         const getBlocks = async () => {
@@ -13,25 +16,54 @@ const Blocks = () => {
                 .then(response => {
                     if(response.status === 200){
                         response.json().then(data => setBlocks(data));
+                    } else if(response.status === 400) {
+                        history.push('/not-found');
+                    } else if(response.status === 500){
+                        history.push('/error');
                     } else {
-                        // handle error case
+                        throw new Error('An unknown error has occured');
                     }
                     
                 })
                 .catch(error => console.log(error));
+            await actions.getBlocksTip()
+                .then(response => {
+                    if(response.status === 200){
+                        response.text().then(data => setIndex(data));
+                    } else if(response.status === 400) {
+                        history.push('/not-found');
+                    } else if(response.status === 500){
+                        history.push('/error');
+                    } else {
+                        throw new Error('An unknown error has occured');
+                    }
+                })
         };
         getBlocks();
-    }, [actions]);
+    }, [actions, history]);
 
-    const loadMore = () => {
-        console.log('Load more blocks');
+    const loadMore = async (e) => {
+        await actions.getBlocks(index - 10)
+            .then(response => {
+                if(response.status === 200){
+                    response.json().then(data => setBlocks(prevBlocks => [...prevBlocks,...data]))
+                } else if(response.status === 400) {
+                    history.push('/not-found');
+                } else if(response.status === 500){
+                    history.push('/error');
+                } else {
+                    throw new Error('An unknown error has occured');
+                }
+            })
+        ;
+        setIndex(prevIndex => prevIndex -  10);
     }
 
     return(
         <>
             <div className="container">
                 <div className="blocks">
-                    <div className="blockrow">
+                    <div className="blockrow blockrow-title">
                         <span className="blockrow-height">Block Height</span>
                         <span className="blockrow-time">Time</span>
                         <span className="blockrow-transactions">Transactions</span>
@@ -46,9 +78,9 @@ const Blocks = () => {
                 </div>
             </div>
             <div className="container">
-                <div className="load-more flex-between">
+                <div className="load-more flex-evenly">
                     <span>
-                        <a href="#" onClick={loadMore}>Load next 10 Blocks</a>
+                        <button onClick={loadMore}>Load next 10 Blocks</button>
                     </span>
                 </div>
             </div>
@@ -59,12 +91,14 @@ const Blocks = () => {
 
 function BlockRow({ block }){
     return (
-        <div className="blockrow">
-            <span className="blockrow-height"><Link to={`/block/${block.id}`}>{block.height}</Link></span>
-            <span className="blockrow-time"><Link to={`/block/${block.id}`}>{ new Date(block.timestamp * 1000).toLocaleString() }</Link></span>
-            <span className="blockrow-transactions"><Link to={`/block/${block.id}`}>{block.tx_count}</Link></span>
-            <span className="blockrow-size"><Link to={`/block/${block.id}`}>{(block.size/1000).toFixed(2)}</Link></span>
-        </div>
+        <Link to={`/block/${block.id}`}>
+            <div className="blockrow">
+                <span className="blockrow-height">{block.height}</span>
+                <span className="blockrow-time">{ new Date(block.timestamp * 1000).toLocaleString() }</span>
+                <span className="blockrow-transactions">{block.tx_count}</span>
+                <span className="blockrow-size">{(block.size/1000).toFixed(2)}</span>
+            </div>
+        </Link>
     );
     
 
