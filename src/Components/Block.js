@@ -19,6 +19,7 @@ const Block = () => {
         
         const getBlock = async () => {
             await setTransactions([]);
+            await setBlock();
             await actions.getBlock(hash)
                 .then(response => {
                     if(response.status === 200){
