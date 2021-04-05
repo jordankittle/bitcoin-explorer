@@ -16,6 +16,9 @@ const Block = () => {
     const [ errors, setErrors ] = useState([]);
     const history = useHistory();
 
+    // Get block by hash
+    // Get first 25 block transactions
+    // Get block tip height to calculate confirmations
     useEffect(() => {
         
         const getBlock = async () => {

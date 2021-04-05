@@ -12,6 +12,8 @@ const Header = ()  => {
 
     const history = useHistory();
 
+    // Check search query and handled appropriately
+    // There is a very small possibility a transaction hash will be queried as a block hash - unsure how to handle this
     const handleSubmit = async (e) => {
         e.preventDefault();
         const query = search.replace(/\s+/g, '');
@@ -20,7 +22,7 @@ const Header = ()  => {
                 .then(response => {
                     if(response.status === 200){
                         response.text().then(data => history.push(`/block/${data}`) );
-                    } else if(response.status === 400) {
+                    } else if(response.status === 404) {
                         history.push('/not-found');
                     } else if(response.status === 500){
                         history.push('/error');
@@ -42,10 +44,12 @@ const Header = ()  => {
         setSearch('');     
     };
 
+    // Update search form state
     const change = (e) => {
         setSearch(e.target.value);
     };
 
+    // Hide and show menu
     const toggleBurger = (e) => {
         e.preventDefault();
         setMenu(menu ? false : true);

@@ -10,7 +10,7 @@ const Address = () => {
 
     const history = useHistory();
 
-    // Set Address Info to state on component mount and update
+    // Set Address Info to state
     useEffect(() => {
         const getTx = async () => {
             await actions.getAddress(address)
@@ -20,7 +20,7 @@ const Address = () => {
                             setAddressInfo(data);
                         })
                         .catch(error => console.log('unknown error', error));
-                    } else if(response.status === 400) {
+                    } else if(response.status === 404) {
                         history.push('/not-found');
                     } else if(response.status === 500){
                         history.push('/error');

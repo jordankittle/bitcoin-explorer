@@ -15,6 +15,7 @@ const Transaction = () => {
 
     const history = useHistory();
 
+    // Get transactions by transaction ID and set to state
     useEffect(() => {
         const getTx = async () => {
             await actions.getTxById(txid)

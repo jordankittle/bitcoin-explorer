@@ -12,7 +12,7 @@ const BlockAll = () => {
 
     const history = useHistory();
     
-    // Get block hash then load all transactions
+    // Get block hash then load all transactions to state
     useEffect(() => {
         const getBlock = async () => {
             await actions.getBlock(hash)

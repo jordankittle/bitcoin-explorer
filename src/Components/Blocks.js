@@ -10,8 +10,7 @@ const Blocks = () => {
 
     const history = useHistory();
 
-    // Get latest 10 blocks and block tip height
-    // Tip height used to calculate confirmations in transactions
+    // Get latest 10 blocks and block tip height and set to state
     useEffect(() => {
         const getBlocks = async () => {
             await actions.getBlocks()
