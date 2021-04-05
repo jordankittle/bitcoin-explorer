@@ -10,12 +10,17 @@ const Blocks = () => {
 
     const history = useHistory();
 
+    // Get latest 10 blocks and block tip height
+    // Tip height used to calculate confirmations in transactions
     useEffect(() => {
         const getBlocks = async () => {
             await actions.getBlocks()
                 .then(response => {
                     if(response.status === 200){
-                        response.json().then(data => setBlocks(data));
+                        response.json().then(data => {
+                            setBlocks(data);
+                            setIndex(data[0].height)
+                        });
                     } else if(response.status === 404) {
                         history.push('/not-found');
                     } else if(response.status === 500){
@@ -26,18 +31,6 @@ const Blocks = () => {
                     
                 })
                 .catch(error => console.log(error));
-            await actions.getBlocksTip()
-                .then(response => {
-                    if(response.status === 200){
-                        response.text().then(data => setIndex(data));
-                    } else if(response.status === 404) {
-                        history.push('/not-found');
-                    } else if(response.status === 500){
-                        history.push('/error');
-                    } else {
-                        throw new Error('An unknown error has occured');
-                    }
-                })
         };
         getBlocks();
     }, [actions, history]);
