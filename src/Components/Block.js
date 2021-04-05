@@ -1,6 +1,8 @@
 import { useState, useContext, useEffect } from 'react';
 import { useParams, useHistory, Link } from 'react-router-dom';
 import { APIContext } from '../Context';
+import Inputs from './Inputs';
+import Outputs from './Outputs';
 
 const Block = () => {
 
@@ -46,6 +48,10 @@ const Block = () => {
         getBlock();
     }, [actions, hash]);
 
+    const loadMore = () => {
+        console.log('load more tx');
+    };
+
     return(
         <div className="block">
             {
@@ -68,12 +74,18 @@ const Block = () => {
                             </div>
                         </div>
                         <div className="container">
-                                <Transactions transactions={transactions} blockTipHeight={blockTipHeight} />
+                                {
+                                    transactions?
+                                        <Transactions transactions={transactions} blockTipHeight={blockTipHeight} />
+                                    :
+                                        null
+                                }
+                                
                         </div>
                         <div className="container">
                             <div className="load-more flex-between">
                                 <span>
-                                    Load next 25 Transactions
+                                    <a href="#" onClick={loadMore}>Load next 25 Transactions</a>
                                 </span>
                                 <span>
                                     <Link to={`/block/${hash}/all`}>Load All Transactions</Link>
@@ -83,7 +95,7 @@ const Block = () => {
                         </div>
                     </>
                 :
-                    <span>Loading...</span>
+                    <div className="container">Loading...</div>
             }
         </div>
     );
@@ -135,7 +147,9 @@ function TransactionRow({ transaction, blockTipHeight }){
                         TxID:
                     </div>
                     <div className="txrow-value">
-                        {transaction.txid}
+                        <Link to={`/tx/${transaction.txid}`}>
+                            {transaction.txid}
+                        </Link>
                     </div>
                 </div>
                 <div className="txrow-row flex-between">
@@ -147,7 +161,7 @@ function TransactionRow({ transaction, blockTipHeight }){
                     </div>
                 </div>
                 <div className="txrow-row flex-between">
-                    <div className="txrow-proprety">
+                    <div className="txrow-property">
                         Confirmations:
                     </div>
                     <div className="txrow-value">
@@ -158,7 +172,7 @@ function TransactionRow({ transaction, blockTipHeight }){
                     collapsed?
                     null
                     :
-                    <>
+                    <div classnName="multiline">
                         <div className="txrow-row flex-between">
                             <div className="txrow-property">
                                 Inputs:
@@ -175,7 +189,7 @@ function TransactionRow({ transaction, blockTipHeight }){
                                 {outputs}
                             </div>
                         </div>
-                    </>
+                    </div>
                 }
             </div>
             <div className="txrow-toggle">
@@ -192,49 +206,6 @@ function TransactionRow({ transaction, blockTipHeight }){
                     
             </div>
             
-        </div>
-    );
-}
-
-function Inputs({ txin }) {
-
-    return(
-        <div>
-            <div className="txin-left">
-                {txin.prevout.scriptpubkey_address}
-            </div>
-            <div className="txin-right">
-                <div className="flex-around">
-                    <span>
-                        {(txin.prevout.value/100000000).toFixed(8)}
-                    </span>
-                    <span>
-                        BTC
-                    </span>
-                </div>
-            </div>                   
-        </div>
-
-    );
-}
-
-function Outputs({ txout }) {
-
-    return(
-        <div>
-            <div className="txout-left">
-                {txout.scriptpubkey_address}
-            </div>
-            <div className="txout-right">
-                <div className="flex-around">
-                    <span>
-                        {(txout.value/100000000).toFixed(8)}
-                    </span>
-                    <span>
-                        BTC
-                    </span>
-                </div>
-            </div>
         </div>
     );
 }

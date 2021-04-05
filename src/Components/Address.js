@@ -1,27 +1,20 @@
 import { useState, useEffect, useContext } from 'react';
-import { APIContext } from '../Context';
 import { useParams } from 'react-router-dom';
+import { APIContext } from '../Context';
 
-import Inputs from './Inputs';
-import Outputs from './Outputs';
+const Address = () => {
 
-const Transaction = () => {
-
-    const [ transaction, setTransaction ] = useState();
-    const [ inputs, setInputs ] = useState();
-    const [ outputs, setOutputs ] = useState();
+    const [ addressInfo, setAddressInfo ] = useState();
+    const { address } = useParams();
     const { actions } = useContext(APIContext);
-    const { txid } = useParams();
 
     useEffect(() => {
         const getTx = async () => {
-            await actions.getTxById(txid)
+            await actions.getAddress(address)
                 .then(response => {
                     if(response.status === 200){
                         response.json().then(data => {
-                            setTransaction(data);
-                            setInputs(data.vin.map((txin, index) => <div key={index}>{txin.is_coinbase?'Coinbase':<Inputs txin={txin} />}</div> ));
-                            setOutputs(data.vout.map((txout, index) => <div key={index}>{<Outputs txout={txout} />}</div>)); 
+                            setAddressInfo(data);
                         })
                         .catch(error => console.log('unknown error', error));
                     } else {
@@ -32,32 +25,33 @@ const Transaction = () => {
                 .catch(error => console.log(error));
         };
         getTx();
-    }, [actions]);
+    }, [actions, address]);
 
     return (
         <div className="container">
             <div className="transaction-details">
                 {
-                    transaction?
-                        <TxDetails transaction={transaction} inputs={inputs} outputs={outputs} />
+                    addressInfo?
+                        <AddressInfo addressInfo={addressInfo} />
                     :
                         <div className="container">Loading...</div>
                 }
             </div>
         </div>
+        
     );
 };
 
-function TxDetails({ transaction, inputs, outputs }){
+function AddressInfo({ addressInfo }){
     return (
         <>
             <div className="txrow">
                 <div className="txrow-row flex-between">
                     <div className="txrow-property">
-                        Status:
+                        Address:
                     </div>
                     <div className="txrow-value">
-                        {transaction.status.confirmed ? "True" : "Unconfirmed"}
+                        {addressInfo.address}
                     </div>
                 </div>
                 
@@ -65,40 +59,40 @@ function TxDetails({ transaction, inputs, outputs }){
             <div className="txrow">
                 <div className="txrow-row flex-between">
                     <div className="txrow-property">
-                        Fee:
+                        Transactions:
                     </div>
                     <div className="txrow-value">
-                        {transaction.fee} sats
+                        {addressInfo.chain_stats.tx_count}
                     </div>
                 </div>
             </div>
             <div className="txrow">
                 <div className="txrow-row flex-between">
                     <div className="txrow-property">
-                        Size:
+                        Received:
                     </div>
                     <div className="txrow-value">
-                        {transaction.size} B
+                        {(addressInfo.chain_stats.funded_txo_sum/100000000).toFixed(8)} BTC
                     </div>
                 </div>
             </div>
             <div className="txrow">
                 <div className="txrow-row flex-between">
                     <div className="txrow-property">
-                        Inputs:
+                        Spent:
                     </div>
                     <div className="txrow-value">
-                        {inputs}
+                    {(addressInfo.chain_stats.spent_txo_sum/100000000).toFixed(8)} BTC
                     </div>
                 </div>
             </div>
             <div className="txrow">
                 <div className="txrow-row flex-between">
                     <div className="txrow-property">
-                        Outputs:
+                        Balance:
                     </div>
                     <div className="txrow-value">
-                        {outputs}
+                        {((addressInfo.chain_stats.funded_txo_sum - +addressInfo.chain_stats.spent_txo_sum)/10000000).toFixed(8)} BTC
                     </div>
                 </div>
             </div>
@@ -107,4 +101,4 @@ function TxDetails({ transaction, inputs, outputs }){
     );
 }
 
-export default Transaction;
+export default Address;

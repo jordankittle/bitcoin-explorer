@@ -69,6 +69,11 @@ export const Provider = (props) => {
         return response;
     };
 
+    const getAddress = async (address) => {
+        const response = await api(`/address/${address}`);
+        return response;
+    };
+
     
 
     return(
@@ -81,6 +86,7 @@ export const Provider = (props) => {
                 getAllBlockTxs,
                 getBlocksTip,
                 getTxById,
+                getAddress,
             }
         }}>
         { props.children }
