@@ -1,15 +1,15 @@
 # Bitcoin Explorer
-## By: Jordan Kittle
-### Powered by: Blockstream API
+### By: Jordan Kittle
+#### Powered by: Blockstream API
 
-## To run the project
+### To run the project
 - $ npm install
 - $ npm start
 
-## Todo
+### Todo
  - Add better loading visualization
  - Cache results
  - Use cached data if available before querying API
 
-## Notes
+### Notes
 I would like to thank Samson for this opportunity and experience.
