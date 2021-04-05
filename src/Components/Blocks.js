@@ -4,7 +4,7 @@ import { APIContext } from '../Context';
 
 const Blocks = () => {
 
-    const [ blocks, setBlocks ] = useState([]);
+    const [ blocks, setBlocks ] = useState();
     const [ index, setIndex ] = useState();
     const { actions } = useContext(APIContext);
 
@@ -16,7 +16,7 @@ const Blocks = () => {
                 .then(response => {
                     if(response.status === 200){
                         response.json().then(data => setBlocks(data));
-                    } else if(response.status === 400) {
+                    } else if(response.status === 404) {
                         history.push('/not-found');
                     } else if(response.status === 500){
                         history.push('/error');
@@ -30,7 +30,7 @@ const Blocks = () => {
                 .then(response => {
                     if(response.status === 200){
                         response.text().then(data => setIndex(data));
-                    } else if(response.status === 400) {
+                    } else if(response.status === 404) {
                         history.push('/not-found');
                     } else if(response.status === 500){
                         history.push('/error');
@@ -47,7 +47,7 @@ const Blocks = () => {
             .then(response => {
                 if(response.status === 200){
                     response.json().then(data => setBlocks(prevBlocks => [...prevBlocks,...data]))
-                } else if(response.status === 400) {
+                } else if(response.status === 404) {
                     history.push('/not-found');
                 } else if(response.status === 500){
                     history.push('/error');

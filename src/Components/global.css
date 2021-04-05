@@ -265,6 +265,11 @@ button:hover {
     color: var(--hover-blue);
 }
 
+.error{
+    color: rgb(219, 219, 35);
+    margin: 0 15px;
+}
+
 
 /* Media Queries */
 

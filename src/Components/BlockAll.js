@@ -7,19 +7,19 @@ const BlockAll = () => {
 
     const [ block, setBlock ] = useState();
     const [ transactions, setTransactions ] = useState();
-    const [ blockTipHeight, setBlockTipHeight ] = useState();
     const { actions } = useContext(APIContext);
     const { hash } = useParams();
 
     const history = useHistory();
-
+    
+    // Get block hash then load all transactions
     useEffect(() => {
         const getBlock = async () => {
             await actions.getBlock(hash)
                 .then(response => {
                     if(response.status === 200){
                         response.json().then(data => setBlock(data));
-                    } else if(response.status === 400) {
+                    } else if(response.status === 404) {
                         history.push('/not-found');
                     } else if(response.status === 500){
                         history.push('/error');
@@ -33,20 +33,7 @@ const BlockAll = () => {
                 .then(response => {
                     if(response.status === 200){
                         response.json().then(data => setTransactions(data));
-                    } else if(response.status === 400) {
-                        history.push('/not-found');
-                    } else if(response.status === 500){
-                        history.push('/error');
-                    } else {
-                        throw new Error('An unknown error has occured');
-                    }
-                })
-                .catch(error => console.log(error));
-            await actions.getBlocksTip()
-                .then(response => {
-                    if(response.status === 200){
-                        response.text().then(data => setBlockTipHeight(data));
-                    } else if(response.status === 400) {
+                    } else if(response.status === 404) {
                         history.push('/not-found');
                     } else if(response.status === 500){
                         history.push('/error');
@@ -62,7 +49,7 @@ const BlockAll = () => {
     return(
         <div className="block">
             {
-                block && transactions && blockTipHeight?
+                block && transactions?
                     <>
                         <div className="container">
                             <div className="block-details">
@@ -81,7 +68,7 @@ const BlockAll = () => {
                             </div>
                         </div>
                         <div className="container">
-                                <TransactionsAll transactions={transactions} blockTipHeight={blockTipHeight} />
+                                <TransactionsAll transactions={transactions} />
                         </div>
                     </>
                 :
@@ -91,7 +78,7 @@ const BlockAll = () => {
     );
 };
 
-function TransactionsAll({ transactions, blockTipHeight }){
+function TransactionsAll({ transactions}){
 
     return(
         <div className="transaction-list transaction-list-spaced">

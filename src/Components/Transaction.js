@@ -26,7 +26,7 @@ const Transaction = () => {
                             setOutputs(data.vout.map((txout, index) => <div key={index}>{<Outputs txout={txout} />}</div>)); 
                         })
                         .catch(error => console.log('unknown error', error));
-                    } else if(response.status === 400) {
+                    } else if(response.status === 404) {
                         history.push('/not-found');
                     } else if(response.status === 500){
                         history.push('/error');

@@ -13,6 +13,7 @@ const Block = () => {
     const [ blockTipHeight, setBlockTipHeight ] = useState();
     const { actions } = useContext(APIContext);
     const { hash } = useParams();
+    const [ errors, setErrors ] = useState([]);
     const history = useHistory();
 
     useEffect(() => {
@@ -20,11 +21,13 @@ const Block = () => {
         const getBlock = async () => {
             await setTransactions([]);
             await setBlock();
+            await setIndex(25);
+            await setErrors([]);
             await actions.getBlock(hash)
                 .then(response => {
                     if(response.status === 200){
                         response.json().then(data => setBlock(data));
-                    } else if(response.status === 400) {
+                    } else if(response.status === 404) {
                         history.push('/not-found');
                     } else if(response.status === 500){
                         history.push('/error');
@@ -38,7 +41,7 @@ const Block = () => {
                 .then(response => {
                     if(response.status === 200){
                         response.json().then(data => setTransactions(data));
-                    } else if(response.status === 400) {
+                    } else if(response.status === 404) {
                         history.push('/not-found');
                     } else if(response.status === 500){
                         history.push('/error');
@@ -51,7 +54,7 @@ const Block = () => {
                 .then(response => {
                     if(response.status === 200){
                         response.text().then(data => setBlockTipHeight(data));
-                    } else if(response.status === 400) {
+                    } else if(response.status === 404) {
                         history.push('/not-found');
                     } else if(response.status === 500){
                         history.push('/error');
@@ -64,14 +67,14 @@ const Block = () => {
         getBlock();
     }, [actions, hash, history]);
 
-    // Load the next
+    // Load the next 25 transactions and append to current list
     const loadMore = async (e) => {
         await actions.getBlockTxsByIndex(hash, index)
                 .then(response => {
                     if(response.status === 200){
                         response.json().then(data => setTransactions(prevTransactions => [...prevTransactions,...data]));
-                    } else if(response.status === 400) {
-                        history.push('/not-found');
+                    } else if(response.status === 404) {
+                        setErrors(['There are no more transactions']);
                     } else if(response.status === 500){
                         history.push('/error');
                     } else {
@@ -115,6 +118,12 @@ const Block = () => {
                             <div className="load-more flex-between">
                                 <span>
                                     <button onClick={loadMore}>Load next 25 Transactions</button>
+                                    {
+                                        errors.length ?
+                                            <span className="error">{errors.map(error => error)}</span>
+                                        :
+                                            null
+                                    }
                                 </span>
                                 <span>
                                     <button onClick={() => history.push(`/block/${hash}/all`)}>Load All Transactions</button>
