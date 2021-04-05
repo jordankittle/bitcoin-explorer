@@ -12,4 +12,4 @@
  - Use cached data if available before querying API
 
 ### Notes
-I would like to thank Samson for this opportunity and experience.
+I would like to thank Samson for this opportunity and experience

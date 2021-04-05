@@ -60,6 +60,7 @@ const Blocks = () => {
                         <span className="blockrow-time">Time</span>
                         <span className="blockrow-transactions">Transactions</span>
                         <span className="blockrow-size">Size(KB)</span>
+                        <span className="blockrow-size">Weight(KWU)</span>
                     </div>
                     {
                         blocks?
@@ -89,6 +90,7 @@ function BlockRow({ block }){
                 <span className="blockrow-time">{ new Date(block.timestamp * 1000).toLocaleString() }</span>
                 <span className="blockrow-transactions">{block.tx_count}</span>
                 <span className="blockrow-size">{(block.size/1000).toFixed(2)}</span>
+                <span className="blockrow-weight">{(block.weight/1000).toFixed(2)}</span>
             </div>
         </Link>
     );
