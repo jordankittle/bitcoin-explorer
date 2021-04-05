@@ -9,7 +9,7 @@ const Block = () => {
 
     const [ block, setBlock ] = useState();
     const [ transactions, setTransactions ] = useState([]);
-    const [ index, setIndex ] = useState(0);
+    const [ index, setIndex ] = useState(25);
     const [ blockTipHeight, setBlockTipHeight ] = useState();
     const { actions } = useContext(APIContext);
     const { hash } = useParams();
@@ -31,7 +31,7 @@ const Block = () => {
                     
                 })
                 .catch(error => console.log(error));
-            await actions.getBlockTxIdsByIndex(hash, 0)
+            await actions.getBlockTxsByIndex(hash, 0)
                 .then(response => {
                     if(response.status === 200){
                         response.json().then(data => setTransactions(data));
@@ -61,8 +61,9 @@ const Block = () => {
         getBlock();
     }, [actions, hash, history]);
 
+    // Load the next
     const loadMore = async (e) => {
-        await actions.getBlockTxIdsByIndex(hash, index)
+        await actions.getBlockTxsByIndex(hash, index)
                 .then(response => {
                     if(response.status === 200){
                         response.json().then(data => setTransactions(prevTransactions => [...prevTransactions,...data]));

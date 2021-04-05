@@ -10,6 +10,7 @@ const Address = () => {
 
     const history = useHistory();
 
+    // Set Address Info to state on component mount and update
     useEffect(() => {
         const getTx = async () => {
             await actions.getAddress(address)
@@ -48,6 +49,7 @@ const Address = () => {
     );
 };
 
+// Display all address information in state
 function AddressInfo({ addressInfo }){
     return (
         <>
