@@ -27,6 +27,15 @@ a:active{
     color: var(--main-blue);
 }
 
+.flex-around {
+    display: flex;
+    justify-content: space-between;
+}
+.flex-between {
+    display: flex;
+    justify-content: space-between;
+}
+
 
 /*  Header */
 
@@ -57,6 +66,10 @@ main {
     max-width: 1250px;
     margin: 0 auto;
     padding: 0 1rem;
+}
+
+.hide {
+    display: none;
 }
 
 .header-flex {
@@ -131,6 +144,9 @@ main {
     text-align: left;
     width: 60%;
 }
+.load-more{
+    width: 60%;
+}
 
 .transaction-list{
     margin-top:25px;
@@ -138,8 +154,7 @@ main {
 }
 
 .txrow{
-    display: flex;
-    font-size:12px;
+    font-size:11px;
     padding: 10px 0px
 }
 .txrow:nth-child(odd){
@@ -148,9 +163,69 @@ main {
 
 .txrow-labels{
     text-align: left;
-    width: 30%;
+    width: 15%;
 }
 .txrow-data{
     text-align: left;
-    width: 70%;
+    width: 85%;
+}
+
+.txrow-property, .tx-row-value{
+    display: inline-block;
+}
+.txrow-property {
+    width:20%
+}
+.txrow-value {
+    width:80%;
+    text-align: left;
+}
+
+.txrow-toggle{
+    margin: auto;
+    text-align: center;
+}
+
+.txin-left, .txout-left {
+    width:80%;
+}
+.txin-right, .txout-right {
+    width: 20%
+}
+.txin-left {
+    color:peru;
+    display: inline-block;
+}
+.txin-right {
+    color:peru;
+    display: inline-block;
+}
+.txout-left {
+    color:seagreen;
+    display: inline-block;
+}
+.txout-right {
+    color:seagreen;
+    display: inline-block;
+}
+
+
+/* Media Queries */
+
+@media (max-width: 1024px) {
+    .text {
+      font-size: 16px;
+    }
+}
+
+@media (max-width: 768px) {
+    .text {
+      font-size: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .text {
+      font-size: 16px;
+    }
 }

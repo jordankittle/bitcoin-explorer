@@ -1,15 +1,12 @@
 import { useState, useContext, useEffect } from 'react';
-import { useParams, useHistory, Link } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import { APIContext } from '../Context';
 
-import TransactionRow from './TransactionRow';
 
-
-const Block = () => {
+const BlockAll = () => {
 
     const [ block, setBlock ] = useState();
     const [ transactions, setTransactions ] = useState();
-    const [ txIndex, setTxIndex ] = useState(0);
     const [ blockTipHeight, setBlockTipHeight ] = useState();
     const { actions } = useContext(APIContext);
     const { hash } = useParams();
@@ -27,7 +24,7 @@ const Block = () => {
                     
                 })
                 .catch(error => console.log(error));
-            await actions.getBlockTxIdsByIndex(hash, txIndex)
+            await actions.getAllBlockTx(hash)
                 .then(response => {
                     if(response.status === 200){
                         response.json().then(data => setTransactions(data));
@@ -71,18 +68,7 @@ const Block = () => {
                             </div>
                         </div>
                         <div className="container">
-                                <Transactions transactions={transactions} blockTipHeight={blockTipHeight} />
-                        </div>
-                        <div className="container">
-                            <div className="load-more flex-between">
-                                <span>
-                                    Load next 25 Transactions
-                                </span>
-                                <span>
-                                    <Link to={`/block/${hash}/txids`}>Load All Transactions</Link>
-                                </span>
-                            </div>
-                            
+                                <TransactionsAll transactions={transactions} blockTipHeight={blockTipHeight} />
                         </div>
                     </>
                 :
@@ -92,13 +78,13 @@ const Block = () => {
     );
 };
 
-function Transactions({ transactions, blockTipHeight }){
+function TransactionsAll({ transactions, blockTipHeight }){
 
     return(
         <div className="transaction-list">
             {
                 transactions? 
-                transactions.map((transaction, index) => <TransactionRow key={index} transaction={transaction} blockTipHeight={blockTipHeight} />)
+                transactions.map((transaction, index) => <span>transactions</span> )
             :
                 <span>Loading...</span>
             }
@@ -107,4 +93,4 @@ function Transactions({ transactions, blockTipHeight }){
     );
 }
 
-export default Block;
+export default BlockAll;

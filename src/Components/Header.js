@@ -21,7 +21,8 @@ const Header = ()  => {
                 })
                 .catch(error => console.log(error));
             
-        }     
+        }
+        setSearch('');     
     };
 
     const change = (e) => {
@@ -43,7 +44,7 @@ const Header = ()  => {
             </div>
             <div className="search">
                 <form onSubmit={handleSubmit}>
-                    <input type="text" id="search" onChange={change} placeholder="Search by Block Height, Block Hash, TxID, or Address"></input>
+                    <input type="text" id="search" value={search} onChange={change} placeholder="Search by Block Height, Block Hash, TxID, or Address"></input>
                 </form>
             </div>
         </header>
