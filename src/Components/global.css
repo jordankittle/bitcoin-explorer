@@ -1,4 +1,6 @@
 /*  Global   */
+@import-normalize;
+
 :root {
     --main-blue:#1995bb;
     --hover-blue: #1daad4;
@@ -34,6 +36,10 @@ a:active{
 .flex-between {
     display: flex;
     justify-content: space-between;
+}
+.flex-even{
+    display:flex;
+    justify-content: space-evenly;
 }
 
 
@@ -207,6 +213,12 @@ main {
 .txout-right {
     color:seagreen;
     display: inline-block;
+}
+.transaction-list {
+    font-size: 12px;
+}
+.transaction-details{
+    width: 60%;
 }
 
 

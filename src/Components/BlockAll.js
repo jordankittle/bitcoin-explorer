@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect } from 'react';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams, useHistory, Link } from 'react-router-dom';
 import { APIContext } from '../Context';
 
 
@@ -24,7 +24,7 @@ const BlockAll = () => {
                     
                 })
                 .catch(error => console.log(error));
-            await actions.getAllBlockTx(hash)
+            await actions.getAllBlockTxs(hash)
                 .then(response => {
                     if(response.status === 200){
                         response.json().then(data => setTransactions(data));
@@ -84,7 +84,10 @@ function TransactionsAll({ transactions, blockTipHeight }){
         <div className="transaction-list">
             {
                 transactions? 
-                transactions.map((transaction, index) => <span>transactions</span> )
+                    transactions.map((transaction, index) => 
+                        <div key={index}>
+                                {`${index+1}.) `}<Link to={`/tx/${transaction}`}>{`${transaction}`}</Link>
+                        </div> )
             :
                 <span>Loading...</span>
             }

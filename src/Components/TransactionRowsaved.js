@@ -11,12 +11,12 @@ const TransactionRow = ({ transaction, blockTipHeight }) => {
         return transaction.vout.reduce((acc, txout) => (txout.value/100000000) + acc, 0).toFixed(8);
     });
 
-    // const [ inputs, setInputs ] = useState(() => {
-    //     ;
-    // });
+    const [ inputs, setInputs ] = useState(() => {
+        return transaction.vin.map((txin, index) => <div key={index}>{txin.is_coinbase?'Coinbase':<Inputs txin={txin} />}</div> );
+    });
 
     const [ outputs, setOutputs ] = useState(() => {
-        return transaction.vout.map((txout, index) => <Outputs key={index} txout={txout} />);
+        return transaction.vout.map((txout, index) => <div key={index}>{<Outputs txout={txout} />}</div>);
     });
 
     const toggle = (e, value) => {
@@ -61,7 +61,8 @@ const TransactionRow = ({ transaction, blockTipHeight }) => {
                                 Inputs:
                             </div>
                             <div className="txrow-value">
-                                {transaction.vin.map((txin, index) => <div key={index}>{txin.is_coinbase?'Coinbase':<Inputs txin={txin} />}</div> )}
+                                {inputs}
+                                {/* {transaction.vin.map((txin, index) => <div key={index}>{txin.is_coinbase?'Coinbase':<Inputs txin={txin} />}</div> )} */}
                             </div>
                         </div>
                         <div className="txrow-row flex-between">
@@ -69,7 +70,7 @@ const TransactionRow = ({ transaction, blockTipHeight }) => {
                                 Outputs:
                             </div>
                             <div className="txrow-value">
-                                {transaction.vout.map((txout, index) => <div key={index}>{<Outputs txout={txout} />}</div>)}
+                                {outputs}
                             </div>
                         </div>
                     </>

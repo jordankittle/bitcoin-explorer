@@ -2,9 +2,6 @@ import { useState, useContext, useEffect } from 'react';
 import { useParams, useHistory, Link } from 'react-router-dom';
 import { APIContext } from '../Context';
 
-import TransactionRow from './TransactionRow';
-
-
 const Block = () => {
 
     const [ block, setBlock ] = useState();
@@ -79,7 +76,7 @@ const Block = () => {
                                     Load next 25 Transactions
                                 </span>
                                 <span>
-                                    <Link to={`/block/${hash}/txids`}>Load All Transactions</Link>
+                                    <Link to={`/block/${hash}/all`}>Load All Transactions</Link>
                                 </span>
                             </div>
                             
@@ -103,6 +100,141 @@ function Transactions({ transactions, blockTipHeight }){
                 <span>Loading...</span>
             }
             
+        </div>
+    );
+}
+
+function TransactionRow({ transaction, blockTipHeight }){
+
+    const [ collapsed, setCollapsed ] = useState(true);
+    const [ confirmations, setConfirmations ] = useState(() => {
+        return +blockTipHeight - transaction.status.block_height + 1;
+    });
+    const [ amount, setAmount ] = useState(() => {
+        return transaction.vout.reduce((acc, txout) => (txout.value/100000000) + acc, 0).toFixed(8);
+    });
+
+    const [ inputs, setInputs ] = useState(() => {
+        return transaction.vin.map((txin, index) => <div key={index}>{txin.is_coinbase?'Coinbase':<Inputs txin={txin} />}</div> );
+    });
+
+    const [ outputs, setOutputs ] = useState(() => {
+        return transaction.vout.map((txout, index) => <div key={index}>{<Outputs txout={txout} />}</div>);
+    });
+
+    const toggle = (e, value) => {
+        e.preventDefault();
+        setCollapsed(value);
+    };
+
+    return(
+        <div className="txrow">
+            <div>
+                <div className="txrow-row flex-between">
+                    <div className="txrow-property">
+                        TxID:
+                    </div>
+                    <div className="txrow-value">
+                        {transaction.txid}
+                    </div>
+                </div>
+                <div className="txrow-row flex-between">
+                    <div className="txrow-property">
+                        Amount:
+                    </div>
+                    <div className="txrow-value">
+                        {amount} BTC
+                    </div>
+                </div>
+                <div className="txrow-row flex-between">
+                    <div className="txrow-proprety">
+                        Confirmations:
+                    </div>
+                    <div className="txrow-value">
+                        {confirmations}
+                    </div>
+                </div>
+                {
+                    collapsed?
+                    null
+                    :
+                    <>
+                        <div className="txrow-row flex-between">
+                            <div className="txrow-property">
+                                Inputs:
+                            </div>
+                            <div className="txrow-value">
+                                {inputs}
+                            </div>
+                        </div>
+                        <div className="txrow-row flex-between">
+                            <div className="txrow-property">
+                                Outputs:
+                            </div>
+                            <div className="txrow-value">
+                                {outputs}
+                            </div>
+                        </div>
+                    </>
+                }
+            </div>
+            <div className="txrow-toggle">
+                    {
+                        collapsed?
+                            <div>
+                                <a href="#" onClick={(e) => toggle(e, false)}>Show More</a>
+                            </div>
+                        :
+                            <div>
+                                <a href="#" onClick={(e) => toggle(e, true)}>Show Less</a>
+                            </div>
+                    }
+                    
+            </div>
+            
+        </div>
+    );
+}
+
+function Inputs({ txin }) {
+
+    return(
+        <div>
+            <div className="txin-left">
+                {txin.prevout.scriptpubkey_address}
+            </div>
+            <div className="txin-right">
+                <div className="flex-around">
+                    <span>
+                        {(txin.prevout.value/100000000).toFixed(8)}
+                    </span>
+                    <span>
+                        BTC
+                    </span>
+                </div>
+            </div>                   
+        </div>
+
+    );
+}
+
+function Outputs({ txout }) {
+
+    return(
+        <div>
+            <div className="txout-left">
+                {txout.scriptpubkey_address}
+            </div>
+            <div className="txout-right">
+                <div className="flex-around">
+                    <span>
+                        {(txout.value/100000000).toFixed(8)}
+                    </span>
+                    <span>
+                        BTC
+                    </span>
+                </div>
+            </div>
         </div>
     );
 }

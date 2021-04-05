@@ -54,13 +54,18 @@ export const Provider = (props) => {
         return response;
     };
 
-    const getAllBlockTx = async (hash) => {
+    const getAllBlockTxs = async (hash) => {
         const response = await api(`/block/${hash}/txids`);
         return response;
     };
 
     const getBlocksTip = async () => {
         const response = await api('/blocks/tip/height');
+        return response;
+    };
+
+    const getTxById = async (txid) => {
+        const response = await api(`/tx/${txid}`);
         return response;
     };
 
@@ -73,7 +78,9 @@ export const Provider = (props) => {
                 getBlock,
                 getBlockHash,
                 getBlockTxIdsByIndex,
+                getAllBlockTxs,
                 getBlocksTip,
+                getTxById,
             }
         }}>
         { props.children }
