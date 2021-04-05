@@ -16,7 +16,9 @@ const Block = () => {
     const history = useHistory();
 
     useEffect(() => {
+        
         const getBlock = async () => {
+            await setTransactions([]);
             await actions.getBlock(hash)
                 .then(response => {
                     if(response.status === 200){
