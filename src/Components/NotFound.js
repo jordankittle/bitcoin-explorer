@@ -1,8 +1,10 @@
 const NotFound = () => {
     return (
-        <div className="wrap error">
-            <h2>Not Found</h2>
-            <p>Sorry! We could not find the page you're looking for.</p>
+        <div className="container">
+            <div className="blocks">
+                <h2>Not Found</h2>
+                <p>Sorry! We could not find the page you're looking for.</p>
+            </div>
         </div>
     );
 };

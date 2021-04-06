@@ -137,10 +137,6 @@ form.searchform::after {
 
 /*  Main Styles */
 
-main {
-
-}
-
 .container{
     display: flex;
     justify-content: space-around;
@@ -373,6 +369,7 @@ button:hover {
         display: flex;
         flex-flow: row wrap;
         position: relative;
+        font-size: 14px;
     }
 
     .burger {
