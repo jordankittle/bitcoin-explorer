@@ -48,18 +48,35 @@ a:active{
 
 /*  Header */
 
+#logo {
+    height: 30px;
+    width: 30px;
+    margin-top: 3px;
+    margin-right: 5px;
+}
+
+.header-logo {
+    display: flex;
+    flex-flow: row nowrap;
+    margin: 5px 0;
+}
+
 .header-logo a {
     text-decoration: none;
     color: var(--main-blue);
+   
 }
 .header-logo a:hover{
     color: var(--hover-blue);
 }
 
+.header-logo h1{
+    margin: 0;
+}
+
 #search {
     width: 90%;
     height: 35px;
-    box-shadow: 0px 0px 3px #ffffff55;
     display: block;
 }
 
@@ -77,7 +94,9 @@ form.searchform input[type=text] {
     float: left;
     padding: 0;
     margin: 0;
-    border: 0;
+    border-width: 1px 0px 1px 1px;
+    border-color: #555555;
+    border-style: solid;
 }
 
 form.searchform button {
@@ -87,6 +106,9 @@ form.searchform button {
     margin: 0;
     height: 35px;
     float: left;
+    border-width: 1px 1px 1px 0px;
+    border-color: #555555;
+    border-style: solid;
 }
 
 form.searchform::after {
@@ -326,6 +348,9 @@ button:hover {
     }
     .searchform, .blocks,  .block-details, .transaction-list, .transaction-details, .load-more {
       width: 80%;
+    }
+    #logo{
+        margin-top: -1px;
     }
 }
 

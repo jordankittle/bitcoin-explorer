@@ -2,6 +2,7 @@ import { useState, useContext } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { APIContext } from '../Context';
 import  useWindowSize from '../Hooks/useWindowSize';
+import logo from '../Images/logo.png';
 
 const Header = ()  => {
 
@@ -58,9 +59,12 @@ const Header = ()  => {
     return (
         <header>
             <div className="wrap header-flex">
-                <h1 className="header-logo">
-                    <Link to="/">Bitcoin Explorer</Link>
-                </h1>
+                <div className="header-logo">
+                   
+                        <Link to="/"><img id="logo" src={logo} alt="Bitcoin logo" /></Link>
+                        <Link to="/"><h1>Bitcoin Explorer</h1></Link>
+                    
+                </div>
                 <nav>
                     {
                         width > 768 || menu ?
