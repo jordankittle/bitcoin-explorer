@@ -96,12 +96,14 @@ const Block = () => {
                             <div className="block-details">
                                 <div className="block-detail-labels">
                                     <div>Block Height:</div>
+                                    <div>Confirmations:</div>
                                     <div>Time:</div>
                                     <div>Transactions:</div>
                                     <div>Size (KB):</div>
                                 </div>
                                 <div className="block-detail-data">
                                     <div>{block.height}</div>
+                                    <div>{blockTipHeight - block.height + 1}</div>
                                     <div>{new Date(block.timestamp * 1000).toLocaleString()}</div>
                                     <div>{block.tx_count}</div>
                                     <div>{(block.size/1000).toFixed(2)}</div>
