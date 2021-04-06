@@ -92,7 +92,7 @@ const Header = ()  => {
                 <form className="searchform" onSubmit={handleSubmit}>
                     <label htmlFor="search"></label>
                     <input type="text" id="search" name="search" value={search} onChange={change} placeholder="Search by Block Height, Block Hash, TxID, or Address"></input>
-                    <button type="submit"><i class="fa fa-search"></i></button>
+                    <button type="submit"><i className="fa fa-search"></i></button>
                 </form>
             </div>
         </header>

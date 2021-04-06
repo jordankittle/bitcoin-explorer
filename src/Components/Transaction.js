@@ -64,7 +64,7 @@ function TxDetails({ transaction, inputs, outputs }){
                         Status:
                     </div>
                     <div className="txrow-value">
-                        {transaction.status.confirmed ? "True" : "Unconfirmed"}
+                        {transaction.status.confirmed ? "Confirmed" : "Unconfirmed"}
                     </div>
                 </div>
                 
