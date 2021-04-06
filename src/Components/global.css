@@ -204,6 +204,7 @@ form.searchform::after {
     display: flex;
     width: 75%;
     justify-content: space-between;
+    font-size: 14px;
 }
 
 .block-detail-labels{
@@ -357,6 +358,11 @@ button:hover {
     body {
         font-size:11px;
     }
+
+    .block-details {
+        font-size: 12px
+    }
+
     .txrow {
         font-size: 10px;
     }
