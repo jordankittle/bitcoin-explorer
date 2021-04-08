@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 function Inputs({ txin }) {
 
     return(
-        <div>
+        <div className="multiline">
             <div className="txin-left">
                 <Link to={`/address/${txin.prevout.scriptpubkey_address}`}>
                     {txin.prevout.scriptpubkey_address}

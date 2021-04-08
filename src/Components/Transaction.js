@@ -23,8 +23,8 @@ const Transaction = () => {
                     if(response.status === 200){
                         response.json().then(data => {
                             setTransaction(data);
-                            setInputs(data.vin.map((txin, index) => <div key={index}>{txin.is_coinbase?'Coinbase':<Inputs txin={txin} />}</div> ));
-                            setOutputs(data.vout.map((txout, index) => <div key={index}>{<Outputs txout={txout} />}</div>)); 
+                            setInputs(data.vin.map((txin, index) => <div className="inputs" key={index}>{txin.is_coinbase?'Coinbase':<Inputs txin={txin} />}</div> ));
+                            setOutputs(data.vout.map((txout, index) => <div className="outputs" key={index}>{<Outputs txout={txout} />}</div>)); 
                         })
                         .catch(error => console.log('unknown error', error));
                     } else if(response.status === 404) {

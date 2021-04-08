@@ -115,7 +115,7 @@ const Block = () => {
                                     transactions?
                                         <Transactions transactions={transactions} blockTipHeight={blockTipHeight} />
                                     :
-                                        null
+                                        <span>Loading...</span>
                                 }
                                 
                         </div>
@@ -170,8 +170,8 @@ function TransactionRow({ transaction, blockTipHeight }){
     useEffect(() => {
         setConfirmations(+blockTipHeight - transaction.status.block_height + 1);
         setAmount(transaction.vout.reduce((acc, txout) => (txout.value/100000000) + acc, 0).toFixed(8));
-        setInputs(transaction.vin.map((txin, index) => <div key={index}>{txin.is_coinbase?'Coinbase':<Inputs txin={txin} />}</div> ));
-        setOutputs(transaction.vout.map((txout, index) => <div key={index}>{<Outputs txout={txout} />}</div>));
+        setInputs(transaction.vin.map((txin, index) => <div className="input" key={index}>{txin.is_coinbase?'Coinbase':<Inputs txin={txin} />}</div> ));
+        setOutputs(transaction.vout.map((txout, index) => <div className="output" key={index}>{<Outputs txout={txout} />}</div>));
     },[setConfirmations, setAmount, setInputs, setOutputs, blockTipHeight, transaction.status.block_height, transaction.vin, transaction.vout]);
 
     const toggle = (e, value) => {

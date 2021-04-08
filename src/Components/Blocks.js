@@ -60,7 +60,7 @@ const Blocks = () => {
                         <span className="blockrow-time">Time</span>
                         <span className="blockrow-transactions">Transactions</span>
                         <span className="blockrow-size">Size(KB)</span>
-                        <span className="blockrow-size">Weight(KWU)</span>
+                        <span className="blockrow-weight">Weight(KWU)</span>
                     </div>
                     {
                         blocks?
@@ -86,11 +86,11 @@ function BlockRow({ block }){
     return (
         <Link to={`/block/${block.id}`}>
             <div className="blockrow">
-                <span className="blockrow-height">{block.height}</span>
-                <span className="blockrow-time">{ new Date(block.timestamp * 1000).toLocaleString() }</span>
-                <span className="blockrow-transactions">{block.tx_count}</span>
-                <span className="blockrow-size">{(block.size/1000).toFixed(2)}</span>
-                <span className="blockrow-weight">{(block.weight/1000).toFixed(2)}</span>
+                <div className="blockrow-height-div"><span className="collapsed-title">Height:</span><span className="blockrow-height">{block.height}</span></div>
+                <div className="blockrow-time-div"><span className="collapsed-title">Timestamp:</span><span className="blockrow-time">{ new Date(block.timestamp * 1000).toLocaleString() }</span></div>
+                <div className="blockrow-transactions-div"><span className="collapsed-title">Transactions:</span><span className="blockrow-transactions">{block.tx_count}</span></div>
+                <div className="blockrow-size-div"><span className="collapsed-title">Size(KB):</span><span className="blockrow-size">{(block.size/1000).toFixed(2)}</span></div>
+                <div className="blockrow-weight-div"><span className="collapsed-title">Weight(KWU):</span><span className="blockrow-weight">{(block.weight/1000).toFixed(2)}</span></div>
             </div>
         </Link>
     );
