@@ -473,8 +473,8 @@ button:hover {
     .header-logo h1{
         font-size:20px;
     }
-    .header-flex {
-        flex-flow: row nowrap;
+    .header-logo {
+        width: 100%;
     }
     
 }
