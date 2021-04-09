@@ -407,7 +407,7 @@ button:hover {
         flex-flow: column nowrap;
     }
     .header-links {
-        text-align: right;
+        text-align: center;
         list-style: none;
         display: flex;
         flex-flow: row wrap;
