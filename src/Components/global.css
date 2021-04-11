@@ -322,10 +322,10 @@ form.searchform::after {
     width: 75%;
 }
 
-.input:nth-child(odd){
+.input:nth-child(2n+2){
     background: #3d3328;
 }
-.output:nth-child(odd){
+.output:nth-child(2n+2){
     background: #253623
 }
 

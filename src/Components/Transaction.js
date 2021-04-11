@@ -9,6 +9,7 @@ const Transaction = () => {
 
     const [ transaction, setTransaction ] = useState();
     const [ inputs, setInputs ] = useState();
+    const [ blockTipHeight, setBlockTipHeight ] = useState();
     const [ outputs, setOutputs ] = useState();
     const { actions } = useContext(APIContext);
     const { txid } = useParams();
@@ -37,6 +38,20 @@ const Transaction = () => {
                     
                 })
                 .catch(error => console.log(error));
+            
+            await actions.getBlocksTip()
+                .then(response => {
+                    if(response.status === 200){
+                        response.text().then(data => setBlockTipHeight(data));
+                    } else if(response.status === 404) {
+                        history.push('/not-found');
+                    } else if(response.status === 500){
+                        history.push('/error');
+                    } else {
+                        throw new Error('An unknown error has occured');
+                    }
+                })
+                .catch(error => console.log(error));
         };
         getTx();
     }, [actions, txid, history]);
@@ -46,7 +61,7 @@ const Transaction = () => {
             <div className="transaction-details">
                 {
                     transaction?
-                        <TxDetails transaction={transaction} inputs={inputs} outputs={outputs} />
+                        <TxDetails transaction={transaction} inputs={inputs} outputs={outputs} confirms={blockTipHeight - transaction.status.block_height + 1} />
                     :
                         <div className="container"><h2>Loading...</h2></div>
                 }
@@ -55,7 +70,7 @@ const Transaction = () => {
     );
 };
 
-function TxDetails({ transaction, inputs, outputs }){
+function TxDetails({ transaction, inputs, outputs, confirms }){
     return (
         <>
             <div className="txrow">
@@ -64,7 +79,7 @@ function TxDetails({ transaction, inputs, outputs }){
                         Status:
                     </div>
                     <div className="txrow-value">
-                        {transaction.status.confirmed ? "Confirmed" : "Unconfirmed"}
+                        {transaction.status.confirmed ? confirms === 1 ? `${confirms} confirmation` : `${confirms} confirmations` : "Unconfirmed"}
                     </div>
                 </div>
                 
